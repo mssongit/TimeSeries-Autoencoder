@@ -374,3 +374,28 @@ params = {'num_columns': len(features),
           'ls': 0, 
           'lr':1e-3, 
          }
+
+if not TEST:
+    scores = []
+    batch_size = 4096
+    gkf = PurgedGroupTimeSeriesSplit(n_splits = n_splits, group_gap = group_gap)
+    for fold, (tr, te) in enumerate(gkf.split(train['action'].values, train['action'].values, train['date'].values)):
+        ckp_path = f'JSModel_{fold}.hdf5'
+        model = create_ae_mlp(**params)
+        ckp = ModelCheckpoint(ckp_path, monitor = 'val_action_AUC', verbose = 0, 
+                              save_best_only = True, save_weights_only = True, mode = 'max')
+        es = EarlyStopping(monitor = 'val_action_AUC', min_delta = 1e-4, patience = 10, mode = 'max', 
+                           baseline = None, restore_best_weights = True, verbose = 0)
+        history = model.fit(X[tr], [X[tr], y[tr], y[tr]], validation_data = (X[te], [X[te], y[te], y[te]]), 
+                            sample_weight = sw[tr], 
+                            epochs = 100, batch_size = batch_size, callbacks = [ckp, es], verbose = 0)
+        hist = pd.DataFrame(history.history)
+        score = hist['val_action_AUC'].max()
+        print(f'Fold {fold} ROC AUC:\t', score)
+        scores.append(score)
+
+        K.clear_session()
+        del model
+        rubbish = gc.collect()
+    
+    print('Weighted Average CV Score:', weighted_average(scores))
