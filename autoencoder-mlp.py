@@ -293,11 +293,11 @@ class PurgedGroupTimeSeriesSplit(_BaseKFold):
             
             
 if TEST:
-    train = pd.read_csv('/kaggle/input/jane-street-market-prediction/train.csv', nrows = 100)
+    train = pd.read_csv('./data/train.csv', nrows = 100)
     features = [c for c in train.columns if 'feature' in c]
 else:
     print('Loading...')
-    train = dtable.fread('../input/jane-street-market-prediction/train.csv').to_pandas()
+    train = dtable.fread('./data/train.csv').to_pandas()
     features = [c for c in train.columns if 'feature' in c]
 
     print('Filling...')
