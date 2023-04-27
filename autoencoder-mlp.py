@@ -289,3 +289,26 @@ class PurgedGroupTimeSeriesSplit(_BaseKFold):
                     pass
                     
             yield [int(i) for i in train_array], [int(i) for i in test_array]
+            
+if TEST:
+    train = pd.read_csv('/kaggle/input/jane-street-market-prediction/train.csv', nrows = 100)
+    features = [c for c in train.columns if 'feature' in c]
+else:
+    print('Loading...')
+    train = dtable.fread('../input/jane-street-market-prediction/train.csv').to_pandas()
+    features = [c for c in train.columns if 'feature' in c]
+
+    print('Filling...')
+    train = train.query('date > 85').reset_index(drop = True) 
+    train = train.query('weight > 0').reset_index(drop = True)
+    train[features] = train[features].fillna(method = 'ffill').fillna(0)
+    train['action'] = ((train['resp_1'] > 0) & (train['resp_2'] > 0) & (train['resp_3'] > 0) & (train['resp_4'] > 0) & (train['resp'] > 0)).astype('int')
+
+    resp_cols = ['resp', 'resp_1', 'resp_2', 'resp_3', 'resp_4']
+
+    X = train[features].values
+    y = np.stack([(train[c] > 0).astype('int') for c in resp_cols]).T
+    date = train['date'].values
+    weight = train['weight'].values
+    resp = train['resp'].values
+    sw = np.mean(np.abs(train[resp_cols].values), axis = 1)
