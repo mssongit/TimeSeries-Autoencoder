@@ -210,6 +210,7 @@ class PurgedGroupTimeSeriesSplit(_BaseKFold):
         self.max_test_group_size = max_test_group_size
         self.verbose = verbose
 
+        
     def split(self, X, y=None, groups=None):
         """Generate indices to split data into training and test set.
         Parameters
@@ -290,6 +291,7 @@ class PurgedGroupTimeSeriesSplit(_BaseKFold):
                     
             yield [int(i) for i in train_array], [int(i) for i in test_array]
             
+            
 if TEST:
     train = pd.read_csv('/kaggle/input/jane-street-market-prediction/train.csv', nrows = 100)
     features = [c for c in train.columns if 'feature' in c]
@@ -316,6 +318,7 @@ else:
     
 n_splits = 5
 group_gap = 31
+
 
 def create_ae_mlp(num_columns, num_labels, hidden_units, dropout_rates, ls = 1e-2, lr = 1e-3):
     
@@ -362,6 +365,7 @@ def create_ae_mlp(num_columns, num_labels, hidden_units, dropout_rates, ls = 1e-
                  )
     
     return model
+
 
 params = {'num_columns': len(features), 
           'num_labels': 5, 
