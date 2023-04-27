@@ -9,6 +9,7 @@ from hyperopt import hp, fmin, tpe, Trials
 from hyperopt.pyll.base import scope
 from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.model_selection import GroupKFold
+from sklearn.model_selection import KFold
 from sklearn.model_selection._split import _BaseKFold, indexable, _num_samples
 from sklearn.utils.validation import _deprecate_positional_args
 import matplotlib.pyplot as plt
@@ -93,6 +94,7 @@ class GroupTimeSeriesSplit(_BaseKFold):
         super().__init__(n_splits, shuffle=False, random_state=None)
         self.max_train_size = max_train_size
 
+        
     def split(self, X, y=None, groups=None):
         """Generate indices to split data into training and test set.
         Parameters
@@ -159,10 +161,8 @@ class GroupTimeSeriesSplit(_BaseKFold):
                                                               test_array_tmp)),
                                      axis=None), axis=None)
             yield [int(i) for i in train_array], [int(i) for i in test_array]
-import numpy as np
-from sklearn.model_selection import KFold
-from sklearn.model_selection._split import _BaseKFold, indexable, _num_samples
-from sklearn.utils.validation import _deprecate_positional_args
+            
+
 
 # modified code for group gaps; source
 # https://github.com/getgaurav2/scikit-learn/blob/d4a3af5cc9da3a76f0266932644b884c99724c57/sklearn/model_selection/_split.py#L2243
