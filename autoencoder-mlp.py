@@ -26,7 +26,6 @@ from tensorflow.keras.callbacks import Callback, ReduceLROnPlateau, ModelCheckpo
 TEST = False
 
 
-
 # weighted average as per Donate et al.'s formula
 # https://doi.org/10.1016/j.neucom.2012.02.053
 # [0.0625, 0.0625, 0.125, 0.25, 0.5] for 5 fold
