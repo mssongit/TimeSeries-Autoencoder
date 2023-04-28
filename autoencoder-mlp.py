@@ -16,7 +16,6 @@ import matplotlib.pyplot as plt
 from tqdm.notebook import tqdm
 from joblib import dump, load
 import datatable as dtable
-
 import tensorflow as tf
 tf.random.set_seed(42)
 import tensorflow.keras.backend as K
