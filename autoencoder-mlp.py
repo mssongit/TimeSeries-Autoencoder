@@ -22,6 +22,7 @@ import tensorflow.keras.backend as K
 import tensorflow.keras.layers as layers
 from tensorflow.keras.callbacks import Callback, ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
 
+# Test
 TEST = False
 
 # weighted average as per Donate et al.'s formula
